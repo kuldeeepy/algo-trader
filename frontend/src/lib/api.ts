@@ -1,4 +1,6 @@
-const BASE = "/api";
+// Dev goes through the Vite proxy; production points at the API host set in
+// VITE_API_BASE at build time.
+const BASE = `${import.meta.env.VITE_API_BASE ?? ""}/api`;
 
 async function post<T>(path: string, body: unknown): Promise<T> {
   const res = await fetch(BASE + path, {

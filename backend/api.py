@@ -9,7 +9,7 @@ from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import Optional
-import math, yfinance as yf
+import math, os, yfinance as yf
 
 
 def _clean(v):
@@ -29,9 +29,15 @@ from universe import all_symbols, SYMBOL_SECTOR, get_ticker
 
 app = FastAPI(title="Algo Trader API", version="1.0.0")
 
+# Local dev by default; ALGO_CORS_ORIGINS adds deployed frontends.
+_origins = [o for o in os.getenv(
+    "ALGO_CORS_ORIGINS", "http://localhost:5173,http://localhost:3000"
+).split(",") if o]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173", "http://localhost:3000"],
+    allow_origins=_origins,
+    allow_origin_regex=r"https://.*\.vercel\.app",
     allow_methods=["*"],
     allow_headers=["*"],
 )
