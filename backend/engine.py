@@ -1,8 +1,6 @@
 import pandas as pd
 import numpy as np
 import yfinance as yf
-import matplotlib.pyplot as plt
-import matplotlib.dates as mdates
 from datetime import datetime, timedelta
 from zoneinfo import ZoneInfo
 from dataclasses import dataclass, field
@@ -356,6 +354,10 @@ def print_report(result: dict, ticker: str, strategy: str) -> None:
 
 def build_chart(df: pd.DataFrame, result: dict, ticker: str, strategy: str):
     """Used by main.py (terminal mode)."""
+    # Imported here so the API server never has to load matplotlib.
+    import matplotlib.pyplot as plt
+    import matplotlib.dates as mdates
+
     fig, axes = plt.subplots(3, 1, figsize=(13, 9), sharex=True)
     fig.suptitle(f"{ticker}  —  {strategy}", fontsize=13, fontweight="bold")
     ax = axes[0]
