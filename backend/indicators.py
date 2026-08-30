@@ -146,5 +146,7 @@ def compute_all(df: pd.DataFrame) -> pd.DataFrame:
     out["vwap_crosses"] = vwap_crossings(out["close"], out["vwap"], window=30)
     out["atr_ratio"]    = atr_ratio(out, period=14, lookback=5)
     out["trend_struct"] = trend_structure(out, lookback=10)
+    # EWM-based volume baseline — valid from bar 1 once warm-up data is prepended
+    out["vol_avg"]      = out["volume"].ewm(span=20, adjust=False).mean()
 
     return out.dropna()

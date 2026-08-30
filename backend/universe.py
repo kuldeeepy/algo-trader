@@ -70,6 +70,41 @@ RANKING_WEIGHTS: dict[str, float] = {
 }
 
 
+# ── Scan universe (stocks-in-play engine) ─────────────────────────────────────
+# Zarattini/Barbon/Aziz (SSRN 4729284): the ORB edge lives almost entirely in
+# "stocks in play" — the day's highest relative-volume names. Profit therefore
+# requires scanning a WIDE universe each morning and trading only the few names
+# that are in play, not asking fixed mega-caps "what fits today?".
+# ~100 liquid NSE F&O names. Unknown/renamed symbols fail gracefully at fetch.
+
+SCAN_UNIVERSE: list[str] = [
+    # NIFTY 50 core
+    "ADANIENT", "ADANIPORTS", "APOLLOHOSP", "ASIANPAINT", "AXISBANK",
+    "BAJAJ-AUTO", "BAJFINANCE", "BAJAJFINSV", "BPCL", "BHARTIARTL",
+    "CIPLA", "COALINDIA", "DRREDDY", "EICHERMOT", "GRASIM",
+    "HCLTECH", "HDFCBANK", "HDFCLIFE", "HEROMOTOCO", "HINDALCO",
+    "ICICIBANK", "ITC", "INDUSINDBK", "INFY", "JSWSTEEL",
+    "KOTAKBANK", "LT", "M&M", "MARUTI", "NTPC",
+    "ONGC", "POWERGRID", "RELIANCE", "SBILIFE", "SBIN",
+    "SUNPHARMA", "TCS", "TATACONSUM", "TATAMOTORS", "TATASTEEL",
+    "TECHM", "TITAN", "ULTRACEMCO", "WIPRO", "ETERNAL", "JIOFIN",
+    # High-beta / midcap F&O movers (where "in play" days actually happen)
+    "ADANIPOWER", "ADANIGREEN", "DLF", "VEDL", "JINDALSTEL", "SAIL",
+    "NMDC", "PNB", "BANKBARODA", "CANBK", "IDFCFIRSTB", "FEDERALBNK",
+    "AUBANK", "INDHOTEL", "IRCTC", "INDIGO", "HAL", "BEL", "BHEL",
+    "IRFC", "RVNL", "PFC", "RECLTD", "NHPC", "GAIL", "IOC", "HINDPETRO",
+    "AMBUJACEM", "DABUR", "MARICO", "HAVELLS", "POLYCAB", "SIEMENS",
+    "ABB", "CGPOWER", "MOTHERSON", "BHARATFORG", "ASHOKLEY", "TVSMOTOR",
+    "EXIDEIND", "APOLLOTYRE", "VOLTAS", "LICHSGFIN", "CHOLAFIN",
+    "MANAPPURAM", "SBICARD", "PAYTM", "ZYDUSLIFE", "LUPIN", "AUROPHARMA",
+    "BIOCON", "GLENMARK", "MPHASIS", "COFORGE", "PERSISTENT", "LTIM",
+    "TATAPOWER", "JSWENERGY", "SUZLON", "KPITTECH", "DIXON", "TRENT",
+    "ABFRL", "UPL", "SRF", "TATACHEM", "JUBLFOOD", "DELHIVERY",
+    "CONCOR", "IDEA", "INDUSTOWER", "HFCL", "MAZDOCK", "COCHINSHIP",
+    "BEML", "OIL", "IGL", "TATAELXSI",
+]
+
+
 def get_ticker(symbol: str) -> str:
     """Return yfinance ticker. Falls back to symbol itself for non-universe stocks (e.g. IOC.NS from search)."""
     return UNIVERSE.get(symbol.upper(), symbol)

@@ -1,0 +1,258 @@
+/Users/kuldeepyadav/Desktop/Others/algo-trader/venv/lib/python3.9/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+
+======================================================================
+  INDEX RESEARCH — Hypothesis 1: 50/200 MA Trend Following
+  Entry: close crosses above SMA50 AND close > SMA200
+  Exit:  close crosses below SMA50 OR hard stop (entry - 2×ATR14)
+  Risk:  1% capital per trade
+  Costs: 0.1% RT (optimistic) and 0.2% RT (realistic) — both reported
+  Split: 70% in-sample (observe), 30% OOS (verdict)
+  Benchmark: buy-and-hold from period start to end, net of 1 RT cost
+======================================================================
+
+======================================================================
+  NIFTY  (^NSEI)
+======================================================================
+  Data      : 2008-07-07 → 2026-05-29  (4386 bars, 17.4 yrs)
+  In-sample : 2008-07-07 → 2021-01-28  (70%)
+  OOS       : 2021-01-29 → 2026-05-29  (30%)  ← the number that counts
+
+  --- IN-SAMPLE ---
+  [0.1% RT cost]
+  Trades        : 62  (avg hold 32.1 days)
+  Win rate      : 35.5%
+  Avg win       : +4.80%   Avg loss: -1.11%
+  Profit factor : 2.29
+  CAGR          : +1.89%   |  Max DD: -6.88%
+  B&H CAGR      : +10.30%   |  Max DD: -45.37%
+  Edge vs B&H   : CAGR -8.41pp  |  DD -38.49pp (+ = less pain)
+
+  [0.2% RT cost]
+  Trades        : 62  (avg hold 32.1 days)
+  Win rate      : 35.5%
+  Avg win       : +4.70%   Avg loss: -1.21%
+  Profit factor : 2.05
+  CAGR          : +1.70%   |  Max DD: -6.88%
+  B&H CAGR      : +10.30%   |  Max DD: -45.37%
+  Edge vs B&H   : CAGR -8.60pp  |  DD -38.49pp (+ = less pain)
+
+  --- OUT-OF-SAMPLE (verdict) ---
+  [0.1% RT cost]
+  Trades        : 37  (avg hold 30.3 days)
+  Win rate      : 27.0%
+  Avg win       : +8.00%   Avg loss: -1.38%
+  Profit factor : 2.08
+  CAGR          : +3.87%   |  Max DD: -4.60%
+  B&H CAGR      : +10.79%   |  Max DD: -17.23%
+  Edge vs B&H   : CAGR -6.92pp  |  DD -12.63pp (+ = less pain)
+
+  [0.2% RT cost]
+  Trades        : 37  (avg hold 30.3 days)
+  Win rate      : 27.0%
+  Avg win       : +7.90%   Avg loss: -1.48%
+  Profit factor : 1.9
+  CAGR          : +3.51%   |  Max DD: -4.60%
+  B&H CAGR      : +10.78%   |  Max DD: -17.23%
+  Edge vs B&H   : CAGR -7.27pp  |  DD -12.63pp (+ = less pain)
+
+  --- COMBINED ---
+  [0.1% RT cost]
+  Trades        : 99  (avg hold 31.4 days)
+  Win rate      : 32.3%
+  Avg win       : +5.80%   Avg loss: -1.22%
+  Profit factor : 2.18
+  CAGR          : +2.25%   |  Max DD: -6.88%
+  B&H CAGR      : +10.37%   |  Max DD: -45.37%
+  Edge vs B&H   : CAGR -8.12pp  |  DD -38.49pp (+ = less pain)
+
+  [0.2% RT cost]
+  Trades        : 99  (avg hold 31.4 days)
+  Win rate      : 32.3%
+  Avg win       : +5.70%   Avg loss: -1.32%
+  Profit factor : 1.98
+  CAGR          : +2.05%   |  Max DD: -6.88%
+  B&H CAGR      : +10.37%   |  Max DD: -45.37%
+  Edge vs B&H   : CAGR -8.32pp  |  DD -38.49pp (+ = less pain)
+
+  --- PER-YEAR (0.1% cost) ---
+label  trades  win_rate  avg_win_pct  avg_loss_pct  pf    total_ret  cagr   max_dd
+----------------------------------------------------------------------------------
+2009   5       60.0      3.08         -1.27         3.25  1.18       1.19   -1.48 
+2010   3       66.7      8.1          -1.08         14.3  4.4        4.41   -1.66 
+2011   1       0.0       0.0          -2.67         0.0   -1.0       -1.0   -1.51 
+2012   8       25.0      2.59         -1.17         0.98  -0.04      -0.04  -1.89 
+2013   6       66.7      1.76         -0.54         6.65  2.3        2.3    -2.7  
+2014   7       42.9      9.27         -1.63         4.33  10.47      10.51  -2.71 
+2015   7       14.3      1.71         -1.48         0.17  -3.52      -3.53  -4.1  
+2016   2       0.0       0.0          -1.11         0.0   -1.25      -1.25  -1.26 
+2017   7       28.6      9.28         -0.64         4.69  8.03       8.06   -3.25 
+2018   7       42.9      3.0          -0.84         3.43  4.2        4.22   -3.84 
+2019   4       25.0      4.46         -1.14         1.44  0.79       0.79   -3.23 
+2020   5       20.0      6.28         -0.62         1.59  0.9        0.9    -1.98 
+2021   9       33.3      13.75        -1.8          4.24  13.39      13.44  -4.89 
+2022   8       12.5      3.41         -1.46         0.39  -2.65      -2.66  -4.48 
+2023   5       40.0      4.99         -0.77         3.07  4.22       4.24   -3.66 
+2024   7       42.9      7.26         -1.51         3.44  9.99       9.99   -3.67 
+2025   5       20.0      3.6          -1.04         1.0   0.02       0.02   -2.42 
+2026   3       0.0       0.0          -1.2          0.0   -2.55      -2.56  -2.6  
+
+  --- PER-YEAR (0.2% cost) ---
+label  trades  win_rate  avg_win_pct  avg_loss_pct  pf     total_ret  cagr   max_dd
+-----------------------------------------------------------------------------------
+2009   5       60.0      2.98         -1.37         2.9    1.08       1.09   -1.48 
+2010   3       66.7      8.0          -1.18         12.92  4.31       4.32   -1.66 
+2011   1       0.0       0.0          -2.77         0.0    -1.04      -1.04  -1.51 
+2012   8       25.0      2.49         -1.27         0.87   -0.32      -0.32  -1.89 
+2013   6       66.7      1.66         -0.64         5.24   2.07       2.08   -2.7  
+2014   7       42.9      9.17         -1.73         4.04   10.13      10.17  -2.71 
+2015   7       14.3      1.61         -1.58         0.15   -3.85      -3.86  -4.1  
+2016   2       0.0       0.0          -1.21         0.0    -1.36      -1.36  -1.26 
+2017   7       28.6      9.18         -0.74         4.02   7.58       7.6    -3.25 
+2018   7       42.9      2.9          -0.94         2.94   3.79       3.8    -3.84 
+2019   4       25.0      4.36         -1.24         1.29   0.57       0.57   -3.23 
+2020   5       20.0      6.18         -0.72         1.35   0.62       0.62   -1.98 
+2021   9       33.3      13.65        -1.91         3.99   13.04      13.09  -4.89 
+2022   8       12.5      3.31         -1.56         0.36   -2.99      -3.0   -4.48 
+2023   5       40.0      4.89         -0.87         2.65   3.8        3.81   -3.66 
+2024   7       42.9      7.16         -1.61         3.18   9.51       9.52   -3.67 
+2025   5       20.0      3.5          -1.14         0.89   -0.43      -0.43  -2.42 
+2026   3       0.0       0.0          -1.3          0.0    -2.78      -2.79  -2.6  
+
+  ============================================================
+  VERDICT — NIFTY
+  ============================================================
+  OOS PF         : 2.08 (0.1% cost)  |  1.9 (0.2% cost)
+  OOS CAGR       : +3.87% (0.1%)  |  +3.51% (0.2%)
+  OOS B&H CAGR   : +10.79% (0.1%)  |  +10.78% (0.2%)
+  OOS Max DD     : Strategy -4.60%  vs  B&H -17.23%
+  Losing OOS yrs : 2 of 6
+
+  DECISION: Marginal edge — lower drawdown than B&H but similar/lower return.
+  'Less pain for same gain' can be valid for real users. Paper trade to verify.
+  Cost caveat: 0.2% RT is more realistic for NIFTYBEES/BANKBEES ETF trades.
+
+======================================================================
+  BANKNIFTY  (^NSEBANK)
+======================================================================
+  Data      : 2008-07-07 → 2026-05-29  (4401 bars, 17.5 yrs)
+  In-sample : 2008-07-07 → 2021-01-19  (70%)
+  OOS       : 2021-01-20 → 2026-05-29  (30%)  ← the number that counts
+
+  --- IN-SAMPLE ---
+  [0.1% RT cost]
+  Trades        : 63  (avg hold 27.7 days)
+  Win rate      : 25.4%
+  Avg win       : +11.32%   Avg loss: -1.58%
+  Profit factor : 2.5
+  CAGR          : +2.48%   |  Max DD: -7.33%
+  B&H CAGR      : +15.94%   |  Max DD: -50.33%
+  Edge vs B&H   : CAGR -13.46pp  |  DD -43.00pp (+ = less pain)
+
+  [0.2% RT cost]
+  Trades        : 63  (avg hold 27.7 days)
+  Win rate      : 25.4%
+  Avg win       : +11.22%   Avg loss: -1.68%
+  Profit factor : 2.31
+  CAGR          : +2.34%   |  Max DD: -7.33%
+  B&H CAGR      : +15.94%   |  Max DD: -50.33%
+  Edge vs B&H   : CAGR -13.60pp  |  DD -43.00pp (+ = less pain)
+
+  --- OUT-OF-SAMPLE (verdict) ---
+  [0.1% RT cost]
+  Trades        : 33  (avg hold 27.8 days)
+  Win rate      : 27.3%
+  Avg win       : +4.45%   Avg loss: -1.24%
+  Profit factor : 1.43
+  CAGR          : +1.10%   |  Max DD: -6.98%
+  B&H CAGR      : +10.00%   |  Max DD: -20.91%
+  Edge vs B&H   : CAGR -8.90pp  |  DD -13.93pp (+ = less pain)
+
+  [0.2% RT cost]
+  Trades        : 33  (avg hold 27.8 days)
+  Win rate      : 27.3%
+  Avg win       : +4.35%   Avg loss: -1.34%
+  Profit factor : 1.28
+  CAGR          : +0.80%   |  Max DD: -6.98%
+  B&H CAGR      : +9.99%   |  Max DD: -20.91%
+  Edge vs B&H   : CAGR -9.19pp  |  DD -13.93pp (+ = less pain)
+
+  --- COMBINED ---
+  [0.1% RT cost]
+  Trades        : 96  (avg hold 27.7 days)
+  Win rate      : 26.0%
+  Avg win       : +8.85%   Avg loss: -1.47%
+  Profit factor : 2.1
+  CAGR          : +1.98%   |  Max DD: -7.33%
+  B&H CAGR      : +14.16%   |  Max DD: -50.33%
+  Edge vs B&H   : CAGR -12.18pp  |  DD -43.00pp (+ = less pain)
+
+  [0.2% RT cost]
+  Trades        : 96  (avg hold 27.7 days)
+  Win rate      : 26.0%
+  Avg win       : +8.75%   Avg loss: -1.57%
+  Profit factor : 1.93
+  CAGR          : +1.82%   |  Max DD: -7.33%
+  B&H CAGR      : +14.16%   |  Max DD: -50.33%
+  Edge vs B&H   : CAGR -12.34pp  |  DD -43.00pp (+ = less pain)
+
+  --- PER-YEAR (0.1% cost) ---
+label  trades  win_rate  avg_win_pct  avg_loss_pct  pf     total_ret  cagr   max_dd
+-----------------------------------------------------------------------------------
+2009   5       20.0      23.8         -1.83         3.32   2.61       2.62   -2.65 
+2010   9       22.2      16.25        -1.66         3.04   6.53       6.55   -3.75 
+2011   2       0.0       0.0          -1.9          0.0    -0.81      -0.82  -0.75 
+2012   6       16.7      5.0          -1.84         0.54   -0.94      -0.94  -2.1  
+2013   2       100.0     9.99         0.0           99.99  6.4        6.42   -2.19 
+2014   8       12.5      35.52        -1.37         3.52   8.18       8.21   -3.79 
+2015   8       25.0      9.05         -1.58         1.75   2.56       2.57   -5.35 
+2016   4       0.0       0.0          -1.6          0.0    -2.37      -2.37  -2.23 
+2017   5       40.0      13.57        -0.93         7.24   9.99       10.03  -3.13 
+2018   6       50.0      3.48         -1.36         3.09   3.69       3.7    -4.56 
+2019   7       28.6      4.33         -1.7          1.25   0.93       0.93   -3.04 
+2020   1       0.0       0.0          -1.66         0.0    -0.8       -0.8   -0.68 
+2021   5       60.0      4.05         -0.47         10.59  4.26       4.27   -2.66 
+2022   5       20.0      5.91         -2.33         0.71   -0.85      -0.85  -3.37 
+2023   4       25.0      8.97         -0.56         3.98   3.25       3.26   -2.19 
+2024   13      23.1      2.3          -1.23         0.62   -2.39      -2.4   -5.86 
+2025   2       0.0       0.0          -0.69         0.0    -1.23      -1.23  -0.88 
+2026   4       25.0      6.14         -1.38         2.49   3.0        3.01   -2.8  
+
+  --- PER-YEAR (0.2% cost) ---
+label  trades  win_rate  avg_win_pct  avg_loss_pct  pf     total_ret  cagr   max_dd
+-----------------------------------------------------------------------------------
+2009   5       20.0      23.7         -1.93         3.14   2.54       2.54   -2.65 
+2010   9       22.2      16.15        -1.76         2.85   6.28       6.3    -3.75 
+2011   2       0.0       0.0          -2.0          0.0    -0.86      -0.86  -0.75 
+2012   6       16.7      4.9          -1.94         0.5    -1.07      -1.07  -2.1  
+2013   2       100.0     9.89         0.0           99.99  6.34       6.36   -2.19 
+2014   8       12.5      35.42        -1.47         3.27   7.91       7.94   -3.79 
+2015   8       25.0      8.95         -1.68         1.63   2.28       2.29   -5.35 
+2016   4       0.0       0.0          -1.7          0.0    -2.53      -2.53  -2.23 
+2017   5       40.0      13.47        -1.03         6.48   9.72       9.76   -3.13 
+2018   6       50.0      3.38         -1.46         2.78   3.38       3.39   -4.56 
+2019   7       28.6      4.23         -1.8          1.14   0.57       0.57   -3.04 
+2020   1       0.0       0.0          -1.76         0.0    -0.85      -0.85  -0.68 
+2021   5       60.0      3.95         -0.57         8.55   4.06       4.08   -2.66 
+2022   5       20.0      5.81         -2.43         0.67   -1.02      -1.02  -3.37 
+2023   4       25.0      8.87         -0.66         3.36   3.02       3.03   -2.19 
+2024   13      23.1      2.2          -1.33         0.55   -3.08      -3.09  -5.86 
+2025   2       0.0       0.0          -0.79         0.0    -1.41      -1.41  -0.88 
+2026   4       25.0      6.04         -1.48         2.28   2.77       2.78   -2.8  
+
+  ============================================================
+  VERDICT — BANKNIFTY
+  ============================================================
+  OOS PF         : 1.43 (0.1% cost)  |  1.28 (0.2% cost)
+  OOS CAGR       : +1.10% (0.1%)  |  +0.80% (0.2%)
+  OOS B&H CAGR   : +10.00% (0.1%)  |  +9.99% (0.2%)
+  OOS Max DD     : Strategy -6.98%  vs  B&H -20.91%
+  Losing OOS yrs : 3 of 6
+
+  DECISION: Marginal edge — lower drawdown than B&H but similar/lower return.
+  'Less pain for same gain' can be valid for real users. Paper trade to verify.
+  Cost caveat: 0.2% RT is more realistic for NIFTYBEES/BANKBEES ETF trades.
+
+
+Done. OOS numbers are the only ones that count.
+If OOS PF < 1.3 on both indices → no reliable edge. Say so and stop.

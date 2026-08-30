@@ -309,7 +309,7 @@ def run_backtest(df: pd.DataFrame, capital: float,
 
     win_sum  = sum(t.pnl for t in wins)
     loss_sum = abs(sum(t.pnl for t in losses))
-    profit_factor = round(win_sum / loss_sum, 2) if loss_sum > 0 else float("inf")
+    profit_factor = round(win_sum / loss_sum, 2) if loss_sum > 0 else 99.99
 
     # Max consecutive losses
     max_cl = cl = 0

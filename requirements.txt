@@ -5,3 +5,4 @@ matplotlib>=3.7.0
 dash>=4.0.0
 dash-bootstrap-components>=2.0.0
 plotly>=5.0.0
+scikit-learn

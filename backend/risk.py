@@ -28,12 +28,13 @@ IST = ZoneInfo("Asia/Kolkata")
 @dataclass
 class RiskConfig:
     risk_per_trade_pct:    float = 1.0   # % of capital to risk per trade
-    max_daily_loss_pct:    float = 2.0   # halt trading after this daily loss
+    max_daily_loss_pct:    float = 3.0   # halt trading after 3% realized daily loss
+    max_position_pct:      float = 25.0  # MIS intraday sizing — fixed costs need notional ≥ ~₹1L
     max_trades_per_day:    int   = 5
     cooldown_after_losses: int   = 2     # consecutive losses before cooldown
     cooldown_minutes:      int   = 60
-    sl_atr_mult:           float = 1.2   # stop loss = entry ± sl_mult * ATR
-    tp_atr_mult:           float = 2.0   # take profit = entry ± tp_mult * ATR
+    sl_atr_mult:           float = 1.0   # fallback SL when no sl_hint provided
+    tp_atr_mult:           float = 2.5   # fallback TP when no tp_hint provided
 
 
 class RiskManager:
@@ -46,6 +47,10 @@ class RiskManager:
         self.trades_today:      int           = 0
         self.consec_losses:     int           = 0
         self.cooldown_until = None  # datetime or None
+
+    def set_capital(self, capital: float) -> None:
+        """Update the current account equity used for sizing and daily risk limits."""
+        self.capital = capital
 
     def reset_daily(self) -> None:
         """Call at the start of each new trading day."""
@@ -78,18 +83,22 @@ class RiskManager:
 
     def position_size(self, cash: float, entry_price: float, sl_price: float) -> int:
         """
-        ATR-based position sizing.
-        shares = (capital * risk%) / stop_distance
-        Capped by available cash.
+        Risk-based position sizing: risk exactly 1% of capital per trade.
+          shares = floor( (capital × 1%) / stop_distance )
+
+        Two hard caps applied after:
+          1. Never exceed available cash
+          2. Never exceed 10% of capital in a single position (protects against
+             very tight SLs that would otherwise create oversized positions)
         """
         stop_distance = abs(entry_price - sl_price)
-        if stop_distance == 0:
+        if stop_distance == 0 or entry_price == 0:
             return 0
         risk_amount = self.capital * (self.cfg.risk_per_trade_pct / 100)
         shares = int(risk_amount / stop_distance)
-        # Don't exceed available cash
         max_by_cash = int(cash // entry_price)
-        return min(shares, max_by_cash)
+        max_by_pct  = int(self.capital * (self.cfg.max_position_pct / 100) / entry_price)
+        return min(shares, max_by_cash, max_by_pct)
 
     def sl_price(self, entry: float, atr: float, direction: int = 1) -> float:
         """Stop loss: entry minus (sl_mult * ATR) for longs."""

@@ -8,9 +8,10 @@ dist/
 build/
 *.egg
 
-# Data / cache — regenerated automatically on first run
-data/cache.db
-data/*.db
+# Data / cache — regenerated automatically on first run.
+# Ignore the whole directory: it holds a live broker access token
+# (upstox_token.json) and ~400MB of cache.
+data/
 
 # Environment
 .env

@@ -12,8 +12,10 @@ import sqlite3
 import os
 import pandas as pd
 from contextlib import contextmanager
+from zoneinfo import ZoneInfo
 
-DB_PATH = os.path.join(os.path.dirname(__file__), "data", "cache.db")
+DB_PATH = os.path.join(os.path.dirname(__file__), "..", "data", "cache.db")
+IST = ZoneInfo("Asia/Kolkata")
 
 
 @contextmanager
@@ -72,6 +74,22 @@ def init_db() -> None:
                 PRIMARY KEY (date, symbol)
             );
         """)
+        con.execute("""
+            DELETE FROM trades
+            WHERE id NOT IN (
+                SELECT MIN(id)
+                FROM trades
+                GROUP BY date, symbol, strategy, entry_time, exit_time,
+                         entry_price, exit_price, shares, exit_reason
+            )
+        """)
+        con.execute("""
+            CREATE UNIQUE INDEX IF NOT EXISTS idx_trades_unique_run
+            ON trades (
+                date, symbol, strategy, entry_time, exit_time,
+                entry_price, exit_price, shares, exit_reason
+            )
+        """)
 
 
 # ── Candle cache ──────────────────────────────────────────────────────────────
@@ -93,16 +111,17 @@ def load_candles(symbol: str, date: str, interval: str):
         return None
 
     df = pd.DataFrame(rows, columns=["timestamp", "open", "high", "low", "close", "volume"])
-    df["timestamp"] = pd.to_datetime(df["timestamp"], utc=True)
+    df["timestamp"] = pd.to_datetime(df["timestamp"], utc=True, format="mixed").dt.tz_convert(IST)
     df = df.set_index("timestamp")
     return df
 
 
 def save_candles(symbol: str, interval: str, df: pd.DataFrame) -> None:
     """Cache OHLCV rows. Ignores duplicates (INSERT OR IGNORE)."""
+    idx = pd.to_datetime(df.index, utc=True).tz_convert(IST)
     rows = [
-        (symbol, interval, str(ts), row.open, row.high, row.low, row.close, int(row.volume))
-        for ts, row in df.iterrows()
+        (symbol, interval, ts.isoformat(), row.open, row.high, row.low, row.close, int(row.volume))
+        for ts, (_, row) in zip(idx, df.iterrows())
     ]
     with _conn() as con:
         con.executemany(
@@ -116,12 +135,12 @@ def save_candles(symbol: str, interval: str, df: pd.DataFrame) -> None:
 # ── Trade log ─────────────────────────────────────────────────────────────────
 
 def save_trades(trades: list[dict]) -> None:
-    """Append a list of trade dicts to the trades table."""
+    """Persist trades idempotently; repeated backtests should not duplicate rows."""
     if not trades:
         return
     with _conn() as con:
         con.executemany(
-            "INSERT INTO trades "
+            "INSERT OR IGNORE INTO trades "
             "(date, symbol, regime, strategy, entry_time, exit_time, "
             " entry_price, exit_price, sl_price, tp_price, shares, "
             " pnl, pnl_pct, exit_reason, entry_reason) "
